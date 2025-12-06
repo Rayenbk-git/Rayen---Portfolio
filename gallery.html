@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Galerie — Rayen Boukadida</title>
+  <meta name="description" content="Galerie des certificats, compétitions et souvenirs de Rayen Boukadida" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --neon:#00ff9f; --accent:#00e6ff; --muted:rgba(255,255,255,0.85); --glass: rgba(5,6,8,0.6);
+      --bg-dark:#020203; --card:#0b0c0d;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;}
+    body{background:#000;overflow-x:hidden;color:var(--muted);-webkit-font-smoothing:antialiased}
+    canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+    .wrap{position:relative;z-index:5;min-height:100vh;padding:28px;display:flex;flex-direction:column;align-items:center;gap:18px}
+    header{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#002b2b,#004b3f);display:flex;align-items:center;justify-content:center;color:var(--neon);font-weight:800;font-size:20px;box-shadow:0 12px 40px rgba(0,255,150,0.08);transition:all 0.3s ease}
+    .logo:hover{transform:scale(1.05);box-shadow:0 12px 40px rgba(0,255,150,0.15)}
+    .title{font-size:20px;color:var(--neon);margin:0}
+    .subtitle{font-size:13px;color:var(--muted);margin:0}
+    nav{display:flex;gap:18px}
+    nav a{color:var(--muted);text-decoration:none;font-weight:600;position:relative;padding:4px 0;transition:all 0.3s ease}
+    nav a:hover{color:var(--accent)}
+    nav a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--neon);transition:width 0.3s ease}
+    nav a:hover::after{width:100%}
+    .gallery-header{width:100%;max-width:1100px;text-align:center;margin-bottom:20px}
+    .gallery-header h1{font-family:'JetBrains Mono', monospace;color:var(--neon);margin:0 0 8px 0;font-size:32px}
+    .gallery-header p{color:var(--muted);margin:0;font-size:16px}
+    .tabs{display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+    .tab-btn{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);padding:10px 20px;border-radius:8px;color:var(--muted);cursor:pointer;transition:all 0.3s ease;font-weight:600}
+    .tab-btn:hover{background:rgba(255,255,255,0.05);border-color:rgba(0,255,159,0.2)}
+    .tab-btn.active{background:linear-gradient(135deg,#002b2b,#004b3f);border-color:var(--neon);color:var(--neon)}
+    .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;width:100%;max-width:1100px}
+    .gallery-item{background:var(--card);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.02);transition:all 0.3s ease;position:relative}
+    .gallery-item:hover{transform:translateY(-5px);border-color:rgba(0,255,159,0.2);box-shadow:0 12px 30px rgba(0,255,159,0.1)}
+    .gallery-item img{width:100%;height:200px;object-fit:cover;display:block}
+    .gallery-item-content{padding:16px}
+    .gallery-item h3{color:var(--neon);margin:0 0 8px 0;font-size:16px}
+    .gallery-item p{margin:0;color:var(--muted);font-size:13px}
+    .gallery-item-date{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.7);padding:4px 8px;border-radius:6px;font-size:12px;color:var(--neon)}
+    .download-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 12px;background:rgba(0,255,159,0.1);border:1px solid rgba(0,255,159,0.2);border-radius:6px;color:var(--neon);text-decoration:none;font-size:12px;font-weight:600;transition:all 0.3s ease}
+    .download-btn:hover{background:rgba(0,255,159,0.2);transform:translateY(-2px)}
+    .back-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:20px;padding:10px 16px;background:rgba(255,255,255,0.05);border-radius:8px;color:var(--neon);text-decoration:none;font-weight:600;transition:all 0.3s ease}
+    .back-btn:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px)}
+    .category-section{margin-bottom:40px;width:100%;max-width:1100px}
+    .category-title{font-family:'JetBrains Mono', monospace;color:var(--neon);margin:0 0 16px 0;font-size:24px;border-bottom:2px solid rgba(0,255,159,0.2);padding-bottom:8px}
+    footer{width:100%;max-width:1100px;display:flex;justify-content:space-between;align-items:center;padding:14px;color:var(--muted);margin-top:40px}
+    @media(max-width:900px){.gallery-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}.logo{width:52px;height:52px}nav{flex-wrap:wrap;justify-content:center}}
+    @media(max-width:600px){header{flex-direction:column;text-align:center;gap:16px}nav{margin-top:8px}.gallery-grid{grid-template-columns:1fr}.gallery-header h1{font-size:24px}}
+  </style>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">RB</div>
+        <div>
+          <div class="title">Rayen Boukadida</div>
+          <div class="subtitle">Étudiant 3ᵉ licence IoT • Membre Securinets</div>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Accueil</a>
+        <a href="index.html#skills">Compétences</a>
+        <a href="index.html#projects">Projets</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </header>
+
+    <div class="gallery-header">
+      <h1></h1>Galerie Portfolio</h1>
+      <p>Certificats, compétitions et souvenirs — Collection complète</p>
+      <a href="index.html" class="back-btn">← Retour à l'accueil</a>
+    </div>
+
+    <!-- Navigation par onglets -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="all">Tout voir</button>
+      <button class="tab-btn" data-tab="certificats">Certificats</button>
+      <button class="tab-btn" data-tab="competitions">Compétitions</button>
+      <button class="tab-btn" data-tab="souvenirs">Souvenirs</button>
+    </div>
+
+    <!-- Section Certificats -->
+    <section class="category-section" id="certificats-section">
+      <h2 class="category-title">🎓 Certificats de Formation</h2>
+      <div class="gallery-grid">
+        <!-- Cisco Cybersecurity -->
+        <div class="gallery-item" data-category="certificats">
+          <img src="assets/gallery/formations/cert2.png" alt="Certificat Cisco Cybersecurity">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>Cisco - Introduction to Packet Tracer Exam</h3>
+            <p>Networking Academy - Fondements de la cybersécurité</p>
+            <a href="/assets/certs/cert1.pdf" download class="download-btn">📥 PDF Original</a>
+          </div>
+        </div>
+
+        
+
+        <!-- Cisco CyberOps -->
+        <div class="gallery-item" data-category="certificats">
+          <img src="assets/gallery/formations/cert1.png" alt="Certificat Cisco CyberOps">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>Cisco - Cyber Threat Management</h3>
+            <p>Networking Academy - Gestion des menaces cyber</p>
+            <a href="/assets/certs/cert2.pdf" download class="download-btn">📥 PDF Original</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Compétitions -->
+    <section class="category-section" id="competitions-section">
+      <h2 class="category-title"> Compétitions & Hackathons</h2>
+      <div class="gallery-grid">
+        <!-- Raksha Pentest -->
+        <div class="gallery-item" data-category="competitions">
+          <img src="assets/competitions/rakshaaa.jpg" alt="Raksha Pentest 2025">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>Raksha Pentest 2025</h3>
+            <p>Participation au workshop et compétition de pentest</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="competitions">
+          <img src="assets/competitions/rakcha1.jpg" alt="Raksha Pentest Équipe">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>Raksha - Session pratique</h3>
+            <p>Travail d'équipe sur les challenges de sécurité</p>
+          </div>
+        </div>
+
+        <!-- HackArena -->
+        <div class="gallery-item" data-category="competitions">
+          <img src="assets/gallery/competitions/hackarena-1.jpg" alt="HackArena 2025">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>HackArena 2025</h3>
+            <p>Compétition en équipe - Challenges de cybersécurité</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="competitions">
+          <img src="assets/gallery/competitions/hackarena-2.jpg" alt="HackArena Cérémonie">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>HackArena - Cérémonie</h3>
+            <p>Remise des prix et networking</p>
+          </div>
+        </div>
+
+        <!-- RedRoom Hackathon -->
+        <div class="gallery-item" data-category="competitions">
+          <img src="assets/gallery/competitions/redroom.jpg" alt="RedRoom Hackathon">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>RedRoom Hackathon</h3>
+            <p>Conférence et CTF - Édition 2025</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="competitions">
+          <img src="assets/gallery/competitions/cybersummit-2.jpg" alt="Cyber Summit Workshop">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>Cyber Summit - Workshop</h3>
+            <p>Session pratique sur les nouvelles technologies</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Souvenirs -->
+    <section class="category-section" id="souvenirs-section">
+      <h2 class="category-title">📸 Souvenirs & Événements</h2>
+      <div class="gallery-grid">
+        <!-- Securinets -->
+        <div class="gallery-item" data-category="souvenirs">
+          <img src="assets/gallery/souvenirs/securinets-1.jpg" alt="Club Securinets">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>Club Securinets</h3>
+            <p>Activités et réunions du club de sécurité</p>
+          </div>
+        </div>
+
+        <!-- Workshops -->
+        <div class="gallery-item" data-category="souvenirs">
+          <img src="assets/gallery/souvenirs/workshop-1.jpg" alt="Workshop Cybersécurité">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>Workshop Pratique</h3>
+            <p>Session de formation technique en cybersécurité</p>
+          </div>
+        </div>
+
+        <!-- Événements universitaires -->
+        <div class="gallery-item" data-category="souvenirs">
+          <img src="assets/gallery/souvenirs/univ-1.jpg" alt="Événement Université">
+          <div class="gallery-item-date">2025</div>
+          <div class="gallery-item-content">
+            <h3>ISITCOM Sousse</h3>
+            <p>Événements et activités universitaires</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="muted">© 2025 Rayen Boukadida — Galerie Portfolio</div>
+      <div class="muted"><a href="index.html" style="color:var(--neon);text-decoration:none">← Retour à l'accueil</a></div>
+    </footer>
+  </div>
+
+  <script>
+    /* ----------------------------
+       Canvas background (identique à l'accueil)
+       ----------------------------*/
+    (function(){
+      const canvas = document.getElementById('bg');
+      const ctx = canvas.getContext('2d');
+      let w = innerWidth, h = innerHeight;
+      const DPR = Math.max(1, window.devicePixelRatio || 1);
+      
+      function resize(){
+        w = innerWidth; h = innerHeight;
+        canvas.width = Math.floor(w * DPR);
+        canvas.height = Math.floor(h * DPR);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const particles = [];
+      const particleCount = Math.min(80, Math.floor(w * h / 15000));
+      const connectionDistance = 150;
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 1.5 + 0.5
+        });
+      }
+
+      function frame(){
+        ctx.fillStyle = 'rgba(2, 3, 5, 0.1)';
+        ctx.fillRect(0, 0, w, h);
+        
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < connectionDistance) {
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(0, 255, 159, ${0.2 * (1 - distance / connectionDistance)})`;
+              ctx.lineWidth = 1;
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+          
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = '#00ff9f';
+          ctx.fill();
+        }
+        
+        requestAnimationFrame(frame);
+      }
+      frame();
+    })();
+
+    /* ----------------------------
+       Filtrage des galeries par onglets
+       ----------------------------*/
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const categorySections = document.querySelectorAll('.category-section');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Retirer la classe active de tous les boutons
+          tabBtns.forEach(b => b.classList.remove('active'));
+          // Ajouter la classe active au bouton cliqué
+          this.classList.add('active');
+          
+          const filter = this.getAttribute('data-tab');
+          
+          if (filter === 'all') {
+            // Afficher toutes les sections et tous les items
+            categorySections.forEach(section => section.style.display = 'block');
+            galleryItems.forEach(item => item.style.display = 'block');
+          } else {
+            // Cacher toutes les sections d'abord
+            categorySections.forEach(section => section.style.display = 'none');
+            // Afficher seulement la section correspondante
+            document.getElementById(`${filter}-section`).style.display = 'block';
+            
+            // Filtrer les items dans la section affichée
+            galleryItems.forEach(item => {
+              if (item.getAttribute('data-category') === filter) {
+                item.style.display = 'block';
+              } else {
+                item.style.display = 'none';
+              }
+            });
+          }
+        });
+      });
+    });
+
+    /* ----------------------------
+       Smooth scrolling pour la navigation
+       ----------------------------*/
+    document.querySelectorAll('nav a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        if(this.getAttribute('href').startsWith('index.html#')) {
+          e.preventDefault();
+          // La navigation vers les ancres de l'index se fera via le lien direct
+        }
+      });
+    });
+  </script>
+</body>
+</html>

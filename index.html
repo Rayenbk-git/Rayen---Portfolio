@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rayen Boukadida — Portfolio Cybersécurité & IOT</title>
+  <meta name="description" content="Rayen Boukadida — Étudiant 3ème licence Ingénierie Systèmes Informatiques IoT, membre Securinets. Projets, certificats, CTFs et contact." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --neon:#00ff9f; --accent:#00e6ff; --muted:rgba(255,255,255,0.85); --glass: rgba(5,6,8,0.6);
+      --bg-dark:#020203; --card:#0b0c0d;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;}
+    body{background:#000;overflow-x:hidden;color:var(--muted);-webkit-font-smoothing:antialiased}
+    canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+    .wrap{position:relative;z-index:5;min-height:100vh;padding:28px;display:flex;flex-direction:column;align-items:center;gap:18px}
+    header{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#002b2b,#004b3f);display:flex;align-items:center;justify-content:center;color:var(--neon);font-weight:800;font-size:20px;box-shadow:0 12px 40px rgba(0,255,150,0.08);transition:all 0.3s ease}
+    .logo:hover{transform:scale(1.05);box-shadow:0 12px 40px rgba(0,255,150,0.15)}
+    .title{font-size:20px;color:var(--neon);margin:0}
+    .subtitle{font-size:13px;color:var(--muted);margin:0}
+    nav{display:flex;gap:18px}
+    nav a{color:var(--muted);text-decoration:none;font-weight:600;position:relative;padding:4px 0;transition:all 0.3s ease}
+    nav a:hover{color:var(--accent)}
+    nav a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--neon);transition:width 0.3s ease}
+    nav a:hover::after{width:100%}
+    .hero{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:28px;backdrop-filter:blur(6px);box-shadow:0 18px 40px rgba(0,0,0,0.6);display:grid;grid-template-columns:1fr 340px;gap:24px}
+    .hero-left h1{font-family:'JetBrains Mono', monospace;color:var(--neon);margin:0 0 6px 0;font-size:28px}
+    .hero-left p{margin:0;color:var(--muted);line-height:1.45}
+    .profile{background:var(--glass);padding:18px;border-radius:12px;text-align:center;border:1px solid rgba(0,255,159,0.05);transition:all 0.3s ease}
+    .profile:hover{border-color:rgba(0,255,159,0.1);box-shadow:0 8px 24px rgba(0,255,159,0.05)}
+    .profile img{width:120px;height:120px;border-radius:999px;object-fit:cover;border:3px solid rgba(0,255,159,0.06);display:block;margin:0 auto;transition:all 0.3s ease}
+    .profile:hover img{border-color:rgba(0,255,159,0.15)}
+    .profile h3{color:var(--neon);margin:10px 0 4px 0}
+    .profile p{margin:0;color:var(--muted);font-size:13px}
+    section{width:100%;max-width:1100px;margin-top:12px}
+    .card{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);transition:all 0.3s ease}
+    .card:hover{border-color:rgba(255,255,255,0.05)}
+    .section-title{font-family:'JetBrains Mono', monospace;color:var(--neon);margin:0 0 10px 0;font-size:18px}
+    .grid{display:grid;gap:14px}
+    .grid-3{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));}
+    .grid-2{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));}
+    .skill{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;font-weight:700;text-align:center;transition:all 0.3s ease;border:1px solid transparent}
+    .skill:hover{background:rgba(255,255,255,0.05);border-color:rgba(0,255,159,0.1);transform:translateY(-2px)}
+    .project{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));border:1px solid rgba(255,255,255,0.02);transition:all 0.3s ease}
+    .project:hover{border-color:rgba(255,255,255,0.05);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+    .project h4{color:var(--neon);margin:0 0 6px 0}
+    .cert{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.01);transition:all 0.3s ease;border:1px solid transparent}
+    .cert:hover{background:rgba(255,255,255,0.03);border-color:rgba(0,255,159,0.1);transform:translateY(-2px)}
+    .cert img{width:64px;height:64px;object-fit:contain;border-radius:8px}
+    .compet{border-radius:10px;overflow:hidden;transition:all 0.3s ease}
+    .compet:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,159,0.1)}
+    .compet img{width:100%;height:160px;object-fit:cover;display:block}
+    .muted{color:rgba(255,255,255,0.65);font-size:13px}
+    footer{width:100%;max-width:1100px;display:flex;justify-content:space-between;align-items:center;padding:14px;color:var(--muted)}
+    .controls{position:fixed;right:18px;bottom:18px;z-index:9;display:flex;gap:10px;flex-direction:column}
+    .btn{background:linear-gradient(135deg,#071927,#002833);color:var(--neon);border:1px solid rgba(0,255,159,0.12);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;transition:all 0.3s ease;font-family:'Inter', sans-serif}
+    .btn:hover{background:linear-gradient(135deg,#002b3d,#004b3f);border-color:rgba(0,255,159,0.3);transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,255,159,0.1)}
+    .btn.small{padding:8px 10px;font-size:13px}
+    a.btn-link{color:var(--neon);text-decoration:none;font-weight:700;transition:all 0.3s ease}
+    a.btn-link:hover{color:var(--accent)}
+    .gallery-btn{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 16px;background:linear-gradient(135deg,#002b2b,#004b3f);border-radius:8px;color:var(--neon);text-decoration:none;font-weight:600;transition:all 0.3s ease}
+    .gallery-btn:hover{background:linear-gradient(135deg,#004b3f,#006b53);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,255,159,0.15)}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.logo{width:52px;height:52px}nav{flex-wrap:wrap;justify-content:center}}
+    @media(max-width:600px){header{flex-direction:column;text-align:center;gap:16px}nav{margin-top:8px}}
+    
+  </style>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">RB</div>
+        <div>
+          <div class="title">Rayen Boukadida</div>
+          <div class="subtitle">Étudiant 3ᵉ licence IoT • Membre Securinets</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#skills">Compétences</a>
+        <a href="#projects">Projets</a>
+        <a href="gallery.html#certs">Certificats</a>
+        <a href="gallery.html">Galerie</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="hero" role="main" aria-labelledby="hero-title">
+      <div class="hero-left">
+        <h1 id="hero-title">Rayen Boukadida — Portfolio Cybersécurité & IOT</h1>
+        <p><strong>Profil :</strong> Étudiant en 3ᵉ année de licence IOT à Institut Superieur d'Informatique et de Technologies de Communications Sousse, en recherche d'un stage PFE. Passionné par les réseaux, l'IoT et la sécurité. Membre actif du club Securinets avec participation à plusieurs CTFs et hackathons.</p>
+
+        <div class="card" style="margin-top:12px">
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:180px">
+              <div class="section-title">Éducation</div>
+              <div class="muted">ISITCOM Sousse — Licence IOT (2023 - 2026)</div>
+              <div class="muted">Bac Mathématiques (2022 - 2023)</div>
+            </div>
+            <div style="flex:1;min-width:180px">
+              <div class="section-title">Langues</div>
+              <div class="muted">Arabe (nat.), Français, Anglais</div>
+            </div>
+          </div>
+        </div>
+
+        <section id="skills" class="card">
+            <div class="section-title">Compétences</div>
+            <div class="grid grid-2">
+                <div class="skill">Python, C, C++, Java, JavaScript</div>
+                <div class="skill">HTML, CSS, SQL</div>
+                <div class="skill">Android Studio (Java)</div>
+                <div class="skill">Firebase, Web Apps</div>
+                <div class="skill">MySQL, SQLite, MongoDB</div>
+                <div class="skill">Sécurité réseaux, cryptographie</div>
+                <div class="skill">Pentesting basique (Kali Linux)</div>
+                <div class="skill">SIEM (Wazuh, ELK Stack)</div>
+                <div class="skill">Wireshark, tcpdump</div>
+                <div class="skill">Git/GitHub, Linux, Docker</div>
+            </div>
+        </section>
+
+        <section id="projects" style="margin-top:16px">
+          <div class="section-title">Projets universitaires & perso</div>
+
+          <div class="project" style="margin-top:8px">
+            <div style="flex:1">
+              <h4>Site web de location de logements pour étudiants</h4>
+              <div class="muted">J’ai développé une plateforme web permettant aux étudiants de rechercher, réserver et louer des logements à distance de manière simple et sécurisée.</div>
+            </div>
+          </div>
+
+          <div class="project" style="margin-top:8px">
+            <div style="flex:1">
+              <h4>Application mobile sportive</h4>
+              <div class="muted">Application Android pour suivi perso des activités et besoins nutritionnels — module Développement Mobile.</div>
+            </div>
+          </div>
+
+          <div class="project" style="margin-top:8px">
+            <div style="flex:1">
+              <h4>Prototype IDS IoT (laboratoire)</h4>
+              <div class="muted">Système d'observation réseau et détection d'intrusion pour capteurs IoT (PoC basé sur Suricata / scripts Python).</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <strong>Expérience</strong>
+            <div class="muted" style="margin-top:6px">
+              <strong>Stagiaire en Confidentialité et IA dans le Secteur Bancaire  — Proxym IT</strong><br>
+              Ce projet de recherche vise à explorer les défis liés à la confidentialité et à la sécurité des données personnelles lors de l’utilisation de l’intelligence artificielle dans le secteur bancaire.
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION GALERIE RAPIDE -->
+        <section id="gallery-preview" style="margin-top:16px">
+          <div class="section-title">Galerie & Certificats</div>
+          <div class="card">
+            <p>Découvrez ma collection complète de certificats, photos de compétitions et souvenirs dans la galerie dédiée :</p>
+            <a href="gallery.html" class="gallery-btn">
+               Accéder à la Galerie Complète
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <aside class="hero-right">
+        <div class="profile card" style="max-width:320px">
+          <img src="assets/profile.png" alt="Photo de Rayen Boukadida" id="profilePhoto">
+          <h3>Rayen Boukadida</h3>
+          <p class="muted">Étudiant 3ᵉ licence IoT • Securinets</p>
+          <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+            <a class="btn" href="assets/CV.pdf" download>📄 Télécharger CV</a>
+            <button class="btn small" id="contactMail" onclick="location.href='mailto:rayenboukadida10@gmail.com '">✉️ Email</button>
+          </div>
+
+          <div style="margin-top:12px">
+            <div class="section-title">Certifications</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+              <div class="cert">
+                <img src="assets/certs/cert1.png" alt="Cisco">
+                <div>
+                  <div style="font-weight:700;color:var(--neon)">Cisco — Introduction to Cybersecurity</div>
+                  <div class="muted">Networking Academy</div>
+                </div>
+              </div>
+
+              
+
+              <div class="cert">
+                <img src="assets/certs/cert2.png" alt="CyberOps">
+                <div>
+                  <div style="font-weight:700;color:var(--neon)">Cisco — Cyber Threat Management</div>
+                  <div class="muted">Networking Academy</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section id="comps" class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div class="section-title">Compétitions & Hackathons</div><div class="muted">Participation active à plusieurs événements</div></div>
+        <div class="muted">Top placements : Top 5 local / Plusieurs participations</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px">
+        <div class="compet">
+          <img src="assets/gallery/competitions/raksha-1.jpg" alt="Raksha Pentest">
+          <div style="padding:8px"><strong>Raksha Pentest 2025</strong><div class="muted">Participation & workshop</div></div>
+        </div>
+
+        <div class="compet">
+          <img src="assets/gallery/competitions/hackarena-1.jpg" alt="HackArena">
+          <div style="padding:8px"><strong>HackArena 2025</strong><div class="muted">Compétition en équipe</div></div>
+        </div>
+
+        <div class="compet">
+          <img src="assets/gallery/competitions/cybersummit-1.jpg" alt="Cyber Summit">
+          <div style="padding:8px"><strong>Cyber Summit 3.0 — 2025</strong><div class="muted">Conference & CTF</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="card" style="margin-top:12px">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+        <div style="flex:1">
+          <div class="section-title">Contact</div>
+          <p class="muted">Tel: +21653192802 • Email: <a href="mailto:rayenboukadida10@gmail.com " class="btn-link">rayenboukadida10@gmail.com </a></p>
+          <p class="muted">LinkedIn: <a href=":www.linkedin.com/in/rayen-boukadida " class="btn-link">www.linkedin.com/in/rayen-boukadida </a></p>
+        </div>
+        <div style="min-width:240px;text-align:right">
+          <a href="https://github.com/" class="btn small" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://tryhackme.com/" class="btn small" target="_blank" rel="noopener">TryHackMe</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="muted">© 2025 Rayen Boukadida — Étudiant IoT • Securinets</div>
+      <div class="muted">Built for portfolio • Local preview</div>
+    </footer>
+  </div>
+
+  <div class="controls" role="region" aria-label="Controls">
+    <button id="soundToggle" class="btn">▶ Activer son</button>
+  </div>
+
+  <script>
+    /* ----------------------------
+       Canvas background (Particle Network)
+       ----------------------------*/
+    (function(){
+      const canvas = document.getElementById('bg');
+      const ctx = canvas.getContext('2d');
+      let w = innerWidth, h = innerHeight;
+      const DPR = Math.max(1, window.devicePixelRatio || 1);
+      
+      function resize(){
+        w = innerWidth; h = innerHeight;
+        canvas.width = Math.floor(w * DPR);
+        canvas.height = Math.floor(h * DPR);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      // Particle system
+      const particles = [];
+      const particleCount = Math.min(80, Math.floor(w * h / 15000));
+      const connectionDistance = 150;
+      
+      // Create particles
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 1.5 + 0.5
+        });
+      }
+
+      function frame(){
+        // Clear with fade effect for trails
+        ctx.fillStyle = 'rgba(2, 3, 5, 0.1)';
+        ctx.fillRect(0, 0, w, h);
+        
+        // Update and draw particles
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          
+          // Update position
+          p.x += p.vx;
+          p.y += p.vy;
+          
+          // Bounce off walls
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          
+          // Draw connections to nearby particles
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < connectionDistance) {
+              // Draw a line with opacity based on distance
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(0, 255, 159, ${0.2 * (1 - distance / connectionDistance)})`;
+              ctx.lineWidth = 1;
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+          
+          // Draw particle
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = '#00ff9f';
+          ctx.fill();
+        }
+        
+        requestAnimationFrame(frame);
+      }
+      frame();
+    })();
+
+    /* ----------------------------
+       Smooth scrolling for navigation
+       ----------------------------*/
+    document.querySelectorAll('nav a').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = this.getAttribute('href');
+
+    // Si c'est un lien interne (#section)
+    if (target.startsWith('#')) {
+      e.preventDefault();
+      const el = document.querySelector(target);
+      if (el) {
+        window.scrollTo({
+          top: el.offsetTop - 20,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // Sinon (gallery.html), on laisse le lien fonctionner normalement
+  });
+});
+
+  </script>
+  
+</body>
+</html>
